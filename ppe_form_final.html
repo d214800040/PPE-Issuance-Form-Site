@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PPE Issuance Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 10px; }
+    select, input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
+    canvas { border: 1px solid #000; margin-top: 10px; }
+    button { padding: 10px; margin-top: 10px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h2>PPE Issuance Form</h2>
+
+  <form id="ppeForm">
+    <label>Your Department
+      <input type="text" name="department" required />
+    </label>
+
+    <label>Your Name
+      <input type="text" name="name" required />
+    </label>
+
+    <label>Helmet
+      <select name="helmet">
+        <option value="">-- Please Select --</option>
+        <option value="White">White</option>
+        <option value="Red">Red</option>
+      </select>
+    </label>
+
+    <label>Coverall
+      <select name="coverall">
+        <option value="">-- Please Select --</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="XXL">XXL</option>
+        <option value="XXXL">XXXL</option>
+        <option value="XXXXL">XXXXL</option>
+        <option value="XXXXXL">XXXXXL</option>
+      </select>
+    </label>
+
+    <label>General Purpose Gloves
+      <select name="gloves">
+        <option value="">-- Please Select --</option>
+        <option value="Size 9">Size 9</option>
+        <option value="Size 10">Size 10</option>
+        <option value="Size 11">Size 11</option>
+      </select>
+    </label>
+
+    <label>Mechanical Gloves
+      <select name="mechanic_gloves">
+        <option value="">-- Please Select --</option>
+        <option value="Size M">Size M</option>
+        <option value="Size L">Size L</option>
+        <option value="Size XL">Size XL</option>
+        <option value="Size XXL">Size XXL</option>
+      </select>
+    </label>
+
+    <label>Low Ankle Safety Shoes
+      <select name="low_ankle">
+        <option value="">-- Please Select --</option>
+        <option value="Size 39">Size 39</option>
+        <option value="Size 40">Size 40</option>
+        <option value="Size 41">Size 41</option>
+        <option value="Size 42">Size 42</option>
+        <option value="Size 43">Size 43</option>
+        <option value="Size 44">Size 44</option>
+        <option value="Size 45">Size 45</option>
+        <option value="Size 46">Size 46</option>
+        <option value="Size 47">Size 47</option>
+      </select>
+    </label>
+
+    <label>Rigger Boots
+      <select name="rigger_boots">
+        <option value="">-- Please Select --</option>
+        <option value="Size 39">Size 39</option>
+        <option value="Size 40">Size 40</option>
+        <option value="Size 41">Size 41</option>
+        <option value="Size 42">Size 42</option>
+        <option value="Size 43">Size 43</option>
+        <option value="Size 44">Size 44</option>
+        <option value="Size 45">Size 45</option>
+        <option value="Size 46">Size 46</option>
+        <option value="Size 47">Size 47</option>
+      </select>
+    </label>
+
+    <label>Safety Goggles
+      <select name="goggles">
+        <option value="">-- Please Select --</option>
+        <option value="Clear">Clear</option>
+        <option value="Dark">Dark</option>
+      </select>
+    </label>
+
+    <label>Others
+      <input type="text" name="others" placeholder="Any other PPE..." />
+    </label>
+
+    <label>Signature (Please sign below)</label>
+    <canvas id="signature-pad" width="500" height="150"></canvas>
+    <button type="button" onclick="clearSignature()">Clear Signature</button>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener('mouseout', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(event) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+    }
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+
+    document.getElementById('ppeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+
+      const formData = {
+        department: form.querySelector('[name="department"]').value,
+        name: form.querySelector('[name="name"]').value,
+        helmet: form.querySelector('[name="helmet"]').value,
+        coverall: form.querySelector('[name="coverall"]').value,
+        gloves: form.querySelector('[name="gloves"]').value,
+        mechanic_gloves: form.querySelector('[name="mechanic_gloves"]').value,
+        low_ankle: form.querySelector('[name="low_ankle"]').value,
+        rigger_boots: form.querySelector('[name="rigger_boots"]').value,
+        goggles: form.querySelector('[name="goggles"]').value,
+        others: form.querySelector('[name="others"]').value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbzjMYDnr_auESrHqdP-imdFmRpDgTju_B_ATt_w1xEtqsKPZMJMYfXfIImmZ_AQNyfK/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.text())
+      .then(res => {
+        alert('Form submitted successfully!');
+        form.reset();
+        clearSignature();
+      })
+      .catch(err => {
+        console.error('Submission error:', err);
+        alert('Submission failed. Please try again.');
+      });
+    });
+  </script>
+</body>
+</html>
