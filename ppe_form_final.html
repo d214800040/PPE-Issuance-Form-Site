@@ -162,13 +162,12 @@
         others: form.querySelector('[name="others"]').value
       };
 
-      fetch('https://script.google.com/macros/s/AKfycbzjMYDnr_auESrHqdP-imdFmRpDgTju_B_ATt_w1xEtqsKPZMJMYfXfIImmZ_AQNyfK/exec', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      fetch('https://ppe-submit-proxy.pages.dev', {
+	  method: 'POST',
+	  headers: { 'Content-Type': 'application/json' },
+	  body: JSON.stringify(formData)
+	})
+
       .then(res => res.text())
       .then(res => {
         alert('Form submitted successfully!');
