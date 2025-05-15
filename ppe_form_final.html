@@ -162,11 +162,14 @@
         others: form.querySelector('[name="others"]').value
       };
 
-      fetch('https://ppe-submit-proxy.pages.dev', {
+	fetch('https://ppe-proxy.deng.workers.dev', {
 	  method: 'POST',
-	  headers: { 'Content-Type': 'application/json' },
+	  headers: {
+	    'Content-Type': 'application/json'
+	  },
 	  body: JSON.stringify(formData)
 	})
+	
 
       .then(res => res.text())
       .then(res => {
